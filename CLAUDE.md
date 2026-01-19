@@ -30,6 +30,14 @@ This is a personal dotfiles repository containing Claude Code configurations, cu
 | `/render-diagrams` | Render Mermaid blocks in markdown to SVG files |
 | `/linkedin-post` | Generate technical LinkedIn posts from URLs |
 | `/cache-cleaner` | Remove Python `__pycache__` directories |
+| `/ieee-paper` | Generate IEEE-formatted LaTeX components (figures, tables, references, etc.) |
+
+## Available Skills
+
+| Skill | Purpose |
+|-------|---------|
+| `architecture-diagrams` | Generate Mermaid architecture diagrams for codebase |
+| `latex` | LaTeX Q&A assistant for IEEE papers (troubleshooting, tips, syntax) |
 
 ## Custom Agents
 

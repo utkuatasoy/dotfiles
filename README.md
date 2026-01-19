@@ -27,6 +27,15 @@ Or copy specific files to your existing `~/.claude/` directory.
 | `/render-diagrams <file>` | Render Mermaid blocks in markdown to SVG files |
 | `/linkedin-post <url>` | Generate technical LinkedIn posts from blog/paper URLs |
 | `/cache-cleaner` | Remove Python `__pycache__` directories recursively |
+| `/ieee-paper <component>` | Generate IEEE-formatted LaTeX components (figures, tables, refs) |
+| `/update <file>` | Update documentation based on recent git diff |
+
+## Available Skills
+
+| Skill | Description |
+|-------|-------------|
+| `architecture-diagrams` | Generate Mermaid architecture diagrams for codebase |
+| `latex` | LaTeX Q&A assistant for IEEE papers (troubleshooting, tips, syntax) |
 
 ## Custom Agents
 
@@ -55,9 +64,12 @@ Creates comprehensive pytest test suites for FastAPI Python backends:
 │   ├── architecture-diagrams.md
 │   ├── render-diagrams.md
 │   ├── linkedin-post.md
-│   └── cache-cleaner.md
+│   ├── cache-cleaner.md
+│   ├── ieee-paper.md
+│   └── update.md
 ├── skills/             # Reusable skill definitions
-│   └── architecture-diagrams.md
+│   ├── architecture-diagrams.md
+│   └── ieee-latex-paper.md
 └── agents/             # Custom agent configurations
     └── test-automation-engineer.md
 ```
