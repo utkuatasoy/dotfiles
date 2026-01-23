@@ -1,3 +1,8 @@
+---
+name: commit
+description: Conventional commit rules. Always follow these conventions when creating git commits.
+---
+
 # Skill: Conventional Commits
 
 Git commit conventions for this user. Follow these rules when creating commits.
