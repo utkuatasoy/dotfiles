@@ -11,6 +11,7 @@ This is a personal dotfiles repository containing Claude Code configurations, cu
 ```
 .claude/
 ├── commands/       # Slash commands invoked with /command-name
+├── templates/      # Project templates (FastAPI rules, etc.)
 ├── skills/         # Reusable skill definitions
 └── agents/         # Custom agent configurations
 ```
@@ -19,6 +20,7 @@ This is a personal dotfiles repository containing Claude Code configurations, cu
 
 | Command | Purpose |
 |---------|---------|
+| `/init` | Initialize project (venv, VS Code config, CLAUDE.md, detect stack) |
 | `/commit` | Conventional commits (single-line, no emoji, splits large changes) |
 | `/lint` | Python linting with Ruff (format + check + fix) |
 | `/tester` | Generate pytest test suites for FastAPI projects |

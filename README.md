@@ -16,6 +16,7 @@ Or copy specific files to your existing `~/.claude/` directory.
 
 | Command | Description |
 |---------|-------------|
+| `/init` | Initialize project (venv, VS Code config, CLAUDE.md, detect stack) |
 | `/commit` | Conventional commits (single-line, no emoji, auto-splits large changes) |
 | `/lint` | Python linting with Ruff (format + check + fix) |
 | `/tester <path>` | Generate pytest test suites for FastAPI projects |
@@ -52,6 +53,7 @@ Creates comprehensive pytest test suites for FastAPI Python backends:
 ```
 .claude/
 ├── commands/           # Slash commands (/command-name)
+│   ├── init.md
 │   ├── commit.md
 │   ├── lint.md
 │   ├── tester.md
@@ -63,6 +65,8 @@ Creates comprehensive pytest test suites for FastAPI Python backends:
 │   ├── cache-cleaner.md
 │   ├── ieee-paper.md
 │   └── update.md
+├── templates/          # Project templates
+│   └── fastapi-rules.md
 ├── skills/             # Reusable skill definitions
 │   ├── architecture-diagrams.md
 │   └── ieee-latex-paper.md
