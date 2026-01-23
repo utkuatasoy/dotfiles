@@ -23,8 +23,6 @@ Or copy specific files to your existing `~/.claude/` directory.
 | `/overview` | Generate comprehensive OVERVIEW.md for a repository |
 | `/readme` | Generate README.md documentation |
 | `/architecture` | Generate architecture diagrams with SVG rendering |
-| `/architecture-diagrams` | Generate Mermaid architecture diagrams |
-| `/render-diagrams <file>` | Render Mermaid blocks in markdown to SVG files |
 | `/linkedin-post <url>` | Generate technical LinkedIn posts from blog/paper URLs |
 | `/cache-cleaner` | Remove Python `__pycache__` directories recursively |
 | `/ieee-paper <component>` | Generate IEEE-formatted LaTeX components (figures, tables, refs) |
@@ -61,8 +59,6 @@ Creates comprehensive pytest test suites for FastAPI Python backends:
 │   ├── overview.md
 │   ├── readme.md
 │   ├── architecture.md
-│   ├── architecture-diagrams.md
-│   ├── render-diagrams.md
 │   ├── linkedin-post.md
 │   ├── cache-cleaner.md
 │   ├── ieee-paper.md
@@ -79,5 +75,5 @@ Creates comprehensive pytest test suites for FastAPI Python backends:
 Some commands require specific tools:
 
 - `/lint`, `/fix-types`: `uv` package manager with `ruff` and `pyrefly`
-- `/render-diagrams`, `/architecture`: `claude-mermaid` MCP plugin
+- `/architecture`: `claude-mermaid` MCP plugin
 - `/tester`: Python project with FastAPI structure

@@ -26,8 +26,6 @@ This is a personal dotfiles repository containing Claude Code configurations, cu
 | `/overview` | Generate comprehensive OVERVIEW.md documentation |
 | `/readme` | Generate README.md documentation |
 | `/architecture` | Generate architecture diagrams with SVG rendering |
-| `/architecture-diagrams` | Generate Mermaid architecture diagrams |
-| `/render-diagrams` | Render Mermaid blocks in markdown to SVG files |
 | `/linkedin-post` | Generate technical LinkedIn posts from URLs |
 | `/cache-cleaner` | Remove Python `__pycache__` directories |
 | `/ieee-paper` | Generate IEEE-formatted LaTeX components (figures, tables, references, etc.) |
