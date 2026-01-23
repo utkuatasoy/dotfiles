@@ -33,6 +33,7 @@ Or copy specific files to your existing `~/.claude/` directory.
 
 | Skill | Description |
 |-------|-------------|
+| `commit` | Conventional commit rules (no emoji, single-line, no co-author) |
 | `architecture-diagrams` | Generate Mermaid architecture diagrams for codebase |
 | `latex` | LaTeX Q&A assistant for IEEE papers (troubleshooting, tips, syntax) |
 
@@ -68,6 +69,7 @@ Creates comprehensive pytest test suites for FastAPI Python backends:
 ├── templates/          # Project templates
 │   └── fastapi-rules.md
 ├── skills/             # Reusable skill definitions
+│   ├── commit.md
 │   ├── architecture-diagrams.md
 │   └── ieee-latex-paper.md
 └── agents/             # Custom agent configurations

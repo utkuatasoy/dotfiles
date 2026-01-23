@@ -36,6 +36,7 @@ This is a personal dotfiles repository containing Claude Code configurations, cu
 
 | Skill | Purpose |
 |-------|---------|
+| `commit` | Conventional commit rules (no emoji, single-line, no co-author) |
 | `architecture-diagrams` | Generate Mermaid architecture diagrams for codebase |
 | `latex` | LaTeX Q&A assistant for IEEE papers (troubleshooting, tips, syntax) |
 
