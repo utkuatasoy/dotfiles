@@ -165,7 +165,7 @@ Generate project-specific CLAUDE.md with:
 - Tech stack summary
 - Coding conventions based on detected stack
 
-**For FastAPI projects**, include the FastAPI rules from `~/.claude/templates/fastapi-rules.md`.
+**For FastAPI projects**, the `fastapi` skill is automatically active with conventions.
 
 Template:
 
@@ -208,7 +208,7 @@ uv run ruff check . --fix
 
 ## Coding Conventions
 
-[Include content from ~/.claude/templates/fastapi-rules.md for FastAPI projects]
+[Document key patterns observed in the codebase]
 ```
 
 ### 6) Generate OVERVIEW.md (optional, if --skip-docs not specified)
