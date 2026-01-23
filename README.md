@@ -28,18 +28,22 @@ Or copy specific files to your existing `~/.claude/` directory.
 | `/cache-cleaner` | Remove Python `__pycache__` directories recursively |
 | `/ieee-paper <component>` | Generate IEEE-formatted LaTeX components (figures, tables, refs) |
 | `/update <file>` | Update documentation based on recent git diff |
+| `/deslop` | Remove AI-generated code slop from branch changes |
 
 ## Available Skills
 
 | Skill | Description |
 |-------|-------------|
 | `commit` | Conventional commit rules (no emoji, single-line, no co-author) |
+| `clean-code` | Avoid AI slop: no obvious comments, no excessive checks, minimal code |
+| `fastapi` | FastAPI/Python conventions and patterns |
+| `find-bugs` | Find bugs, security issues, and code quality problems |
 | `architecture-diagrams` | Generate Mermaid architecture diagrams for codebase |
 | `latex` | LaTeX Q&A assistant for IEEE papers (troubleshooting, tips, syntax) |
 
 ## Custom Agents
 
-### test-automation-engineer
+### test-engineer
 
 Creates comprehensive pytest test suites for FastAPI Python backends:
 
@@ -65,15 +69,17 @@ Creates comprehensive pytest test suites for FastAPI Python backends:
 │   ├── linkedin-post.md
 │   ├── cache-cleaner.md
 │   ├── ieee-paper.md
-│   └── update.md
-├── templates/          # Project templates
-│   └── fastapi-rules.md
+│   ├── update.md
+│   └── deslop.md
 ├── skills/             # Reusable skill definitions
 │   ├── commit.md
+│   ├── clean-code.md
+│   ├── fastapi.md
+│   ├── find-bugs.md
 │   ├── architecture-diagrams.md
-│   └── ieee-latex-paper.md
+│   └── latex.md
 └── agents/             # Custom agent configurations
-    └── test-automation-engineer.md
+    └── test-engineer.md
 ```
 
 ## Requirements

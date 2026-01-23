@@ -11,8 +11,7 @@ This is a personal dotfiles repository containing Claude Code configurations, cu
 ```
 .claude/
 ├── commands/       # Slash commands invoked with /command-name
-├── templates/      # Project templates (FastAPI rules, etc.)
-├── skills/         # Reusable skill definitions
+├── skills/         # Reusable skill definitions (always active)
 └── agents/         # Custom agent configurations
 ```
 
@@ -31,18 +30,23 @@ This is a personal dotfiles repository containing Claude Code configurations, cu
 | `/linkedin-post` | Generate technical LinkedIn posts from URLs |
 | `/cache-cleaner` | Remove Python `__pycache__` directories |
 | `/ieee-paper` | Generate IEEE-formatted LaTeX components (figures, tables, references, etc.) |
+| `/update` | Update documentation based on recent git diff |
+| `/deslop` | Remove AI-generated code slop from branch changes |
 
 ## Available Skills
 
 | Skill | Purpose |
 |-------|---------|
 | `commit` | Conventional commit rules (no emoji, single-line, no co-author) |
+| `clean-code` | Avoid AI slop: no obvious comments, no excessive checks, minimal code |
+| `fastapi` | FastAPI/Python conventions and patterns |
+| `find-bugs` | Find bugs, security issues, and code quality problems |
 | `architecture-diagrams` | Generate Mermaid architecture diagrams for codebase |
 | `latex` | LaTeX Q&A assistant for IEEE papers (troubleshooting, tips, syntax) |
 
 ## Custom Agents
 
-- **test-automation-engineer**: Creates comprehensive pytest test suites for FastAPI Python backends with proper mocking, fixtures, and coverage configuration.
+- **test-engineer**: Creates comprehensive pytest test suites for FastAPI Python backends with proper mocking, fixtures, and coverage configuration.
 
 ## Installation
 
