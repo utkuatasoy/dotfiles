@@ -1,3 +1,8 @@
+---
+name: architecture-diagrams
+description: Generate comprehensive Mermaid architecture diagrams for codebase visualization.
+---
+
 # Architecture Diagrams Generator
 
 Generate comprehensive Mermaid diagrams for the system architecture.
