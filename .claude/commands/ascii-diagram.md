@@ -1,180 +1,174 @@
 # ASCII Architecture Diagram Generator
 
-Convert Mermaid diagrams or architecture descriptions to ASCII art format.
+Create ASCII art diagrams for architecture descriptions.
 
 ---
 
-## Usage
+## Instructions
 
-```
-/ascii-diagram <description or mermaid code>
-```
+When the user describes an architecture, system, or flow:
 
----
-
-## Supported Diagram Types
-
-### 1. Flowcharts (Top-Down / Left-Right)
-```
-┌─────────┐      ┌─────────┐      ┌─────────┐
-│  Input  │ ───▶ │ Process │ ───▶ │ Output  │
-└─────────┘      └─────────┘      └─────────┘
-```
-
-### 2. Sequence Diagrams
-```
-┌────────┐          ┌────────┐          ┌────────┐
-│ Client │          │ Server │          │   DB   │
-└───┬────┘          └───┬────┘          └───┬────┘
-    │    request        │                   │
-    │──────────────────▶│                   │
-    │                   │      query        │
-    │                   │──────────────────▶│
-    │                   │      result       │
-    │                   │◀──────────────────│
-    │    response       │                   │
-    │◀──────────────────│                   │
-```
-
-### 3. Tree Structures
-```
-                    ┌─────────┐
-                    │  Root   │
-                    └────┬────┘
-           ┌─────────────┼─────────────┐
-           ▼             ▼             ▼
-      ┌─────────┐   ┌─────────┐   ┌─────────┐
-      │ Child 1 │   │ Child 2 │   │ Child 3 │
-      └─────────┘   └─────────┘   └─────────┘
-```
-
-### 4. Pipeline/Data Flow
-```
-┌──────────┐    ┌──────────┐    ┌──────────┐    ┌──────────┐
-│  Input   │───▶│  Step 1  │───▶│  Step 2  │───▶│  Output  │
-└──────────┘    └──────────┘    └──────────┘    └──────────┘
-                     │
-                     ▼
-               ┌──────────┐
-               │ Side Eff │
-               └──────────┘
-```
-
-### 5. State Diagrams
-```
-                    ┌───────────────┐
-                    ▼               │
-┌─────────┐    ┌─────────┐    ┌─────────┐
-│  Idle   │───▶│ Running │───▶│  Done   │
-└─────────┘    └─────────┘    └─────────┘
-     ▲              │
-     └──────────────┘
-         (reset)
-```
+1. **Understand the structure** - components, connections, data flow
+2. **Choose the best layout** - horizontal, vertical, or hierarchical
+3. **Draw the ASCII diagram** using proper box-drawing characters
+4. **Add labels and annotations** where needed
 
 ---
 
-## ASCII Building Blocks
+## ASCII Toolkit
 
 ### Boxes
 ```
-┌─────────┐   ╔═════════╗   +----------+
-│  Normal │   ║  Double ║   |  Simple  |
-└─────────┘   ╚═════════╝   +----------+
+┌─────────┐   ╔═════════╗   ┏━━━━━━━━━┓
+│  Normal │   ║  Double ║   ┃  Bold   ┃
+└─────────┘   ╚═════════╝   ┗━━━━━━━━━┛
 ```
 
 ### Arrows
 ```
-───▶  (right)      ◀───  (left)
-  │                  ▲
-  ▼  (down)          │   (up)
-
-───▷  (hollow)     ◁───  (hollow)
-─ ─▶  (dashed)     ◀─ ─  (dashed)
-════▶ (double)     ◀════ (double)
+───▶  ◀───  ───▷  ◁───
+  │     ▲     │     △
+  ▼     │     ▽     │
+════▶  ◀════  ─ ─▶  ◀─ ─
 ```
 
 ### Connectors
 ```
-┌───┬───┐    ┌───┼───┐
-│   │   │    │   │   │
-├───┼───┤    └───┴───┘
-│   │   │
-└───┴───┘
-```
-
-### Decision Diamond
-```
-       ▲
-      ╱ ╲
-     ╱   ╲
-    ╱ Yes?╲
-    ╲     ╱
-     ╲   ╱
-      ╲ ╱
-       ▼
+┬  ┴  ├  ┤  ┼  ┌  ┐  └  ┘
 ```
 
 ---
 
-## Conversion Rules
+## Layout Patterns
 
-When converting from Mermaid to ASCII:
+### Horizontal Flow
+```
+┌───────┐      ┌───────┐      ┌───────┐
+│   A   │ ───▶ │   B   │ ───▶ │   C   │
+└───────┘      └───────┘      └───────┘
+```
 
-1. **graph TD/TB** → Top-to-bottom layout
-2. **graph LR** → Left-to-right layout
-3. **A --> B** → `A ───▶ B`
-4. **A -.-> B** → `A ─ ─▶ B` (dashed)
-5. **A ==> B** → `A ════▶ B` (thick)
-6. **A --> |text| B** → Arrow with label above/below
-7. **subgraph** → Grouped box with title
+### Vertical Flow
+```
+┌───────┐
+│   A   │
+└───┬───┘
+    │
+    ▼
+┌───────┐
+│   B   │
+└───────┘
+```
+
+### Branching
+```
+                    ┌───────┐
+              ┌────▶│   B   │
+              │     └───────┘
+┌───────┐     │
+│   A   │─────┤
+└───────┘     │     ┌───────┐
+              └────▶│   C   │
+                    └───────┘
+```
+
+### Bidirectional
+```
+┌───────┐ ◀────▶ ┌───────┐
+│   A   │        │   B   │
+└───────┘        └───────┘
+```
+
+### Grouped/Layered
+```
+╔═══════════════════════════════╗
+║          Frontend             ║
+║  ┌─────────┐    ┌─────────┐   ║
+║  │ React   │    │  Vue    │   ║
+║  └─────────┘    └─────────┘   ║
+╚═══════════════════════════════╝
+            │
+            ▼
+╔═══════════════════════════════╗
+║          Backend              ║
+╚═══════════════════════════════╝
+```
+
+---
+
+## Style Guidelines
+
+- Use **single-line boxes** (`┌─┐`) for components
+- Use **double-line boxes** (`╔═╗`) for groups/layers
+- Keep consistent spacing between elements
+- Align boxes properly
+- Use clear, readable labels inside boxes
+- Add flow direction indicators
 
 ---
 
 ## Arguments
 
-`$ARGUMENTS` - The Mermaid code or architecture description to convert
-
----
-
-## Execution Steps
-
-1. Parse the input (Mermaid syntax or natural language description)
-2. Identify diagram type (flowchart, sequence, tree, etc.)
-3. Calculate box sizes based on content
-4. Determine layout and spacing
-5. Render ASCII art with proper alignment
-6. Output the diagram in a code block
+`$ARGUMENTS` - Description of the architecture to draw
 
 ---
 
 ## Examples
 
-### Input (Mermaid):
-```mermaid
-graph LR
-    A[User] --> B[API]
-    B --> C[Database]
-    B --> D[Cache]
+**User:** "3-tier web architecture"
+
+**Output:**
+```
+┌─────────────────────────────────────────────────────┐
+│                     CLIENT                          │
+│  ┌─────────┐  ┌─────────┐  ┌─────────┐              │
+│  │ Browser │  │ Mobile  │  │   CLI   │              │
+│  └────┬────┘  └────┬────┘  └────┬────┘              │
+└───────┼────────────┼────────────┼───────────────────┘
+        │            │            │
+        └────────────┼────────────┘
+                     ▼
+┌─────────────────────────────────────────────────────┐
+│                   API LAYER                         │
+│  ┌──────────────────────────────────────────────┐   │
+│  │              Load Balancer                   │   │
+│  └─────────────────────┬────────────────────────┘   │
+│            ┌───────────┼───────────┐                │
+│            ▼           ▼           ▼                │
+│       ┌────────┐  ┌────────┐  ┌────────┐            │
+│       │ API 1  │  │ API 2  │  │ API 3  │            │
+│       └────────┘  └────────┘  └────────┘            │
+└─────────────────────────────────────────────────────┘
+                         │
+                         ▼
+┌─────────────────────────────────────────────────────┐
+│                   DATA LAYER                        │
+│       ┌──────────┐          ┌──────────┐            │
+│       │ Postgres │ ◀──────▶ │  Redis   │            │
+│       └──────────┘          └──────────┘            │
+└─────────────────────────────────────────────────────┘
 ```
 
-### Output (ASCII):
-```
-┌────────┐      ┌────────┐      ┌──────────┐
-│  User  │ ───▶ │  API   │ ───▶ │ Database │
-└────────┘      └───┬────┘      └──────────┘
-                    │
-                    │           ┌──────────┐
-                    └─────────▶ │  Cache   │
-                                └──────────┘
-```
+**User:** "microservices with message queue"
 
-### Input (Natural Language):
-"3 aşamalı pipeline: Input -> Processing -> Output"
-
-### Output (ASCII):
+**Output:**
 ```
-┌─────────┐      ┌────────────┐      ┌─────────┐
-│  Input  │ ───▶ │ Processing │ ───▶ │ Output  │
-└─────────┘      └────────────┘      └─────────┘
+┌──────────┐     ┌──────────┐     ┌──────────┐
+│ Service  │     │ Service  │     │ Service  │
+│    A     │     │    B     │     │    C     │
+└────┬─────┘     └────┬─────┘     └────┬─────┘
+     │                │                │
+     └────────────────┼────────────────┘
+                      ▼
+            ┌──────────────────┐
+            │   Message Queue  │
+            │     (Kafka)      │
+            └────────┬─────────┘
+                     │
+     ┌───────────────┼───────────────┐
+     ▼               ▼               ▼
+┌─────────┐    ┌─────────┐    ┌─────────┐
+│ Worker  │    │ Worker  │    │ Worker  │
+│    1    │    │    2    │    │    3    │
+└─────────┘    └─────────┘    └─────────┘
 ```
