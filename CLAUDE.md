@@ -20,7 +20,7 @@ This is a personal dotfiles repository containing Claude Code configurations, cu
 | Command | Purpose |
 |---------|---------|
 | `/init` | Initialize project (venv, VS Code config, CLAUDE.md, detect stack) |
-| `/commit` | Conventional commits (single-line, no emoji, splits large changes) |
+| `/commit` | Conventional commits (single-line, no emoji, efficiency-aware grouping) |
 | `/lint` | Python linting with Ruff (format + check + fix) |
 | `/tester` | Generate pytest test suites for FastAPI projects |
 | `/fix-types` | Run Pyrefly type checker and fix errors |
@@ -37,7 +37,7 @@ This is a personal dotfiles repository containing Claude Code configurations, cu
 
 | Skill | Purpose |
 |-------|---------|
-| `commit` | Conventional commit rules (no emoji, single-line, no co-author) |
+| `commit` | Conventional commit rules (no emoji, single-line, efficiency-aware) |
 | `clean-code` | Avoid AI slop: no obvious comments, no excessive checks, minimal code |
 | `fastapi` | FastAPI/Python conventions and patterns |
 | `find-bugs` | Find bugs, security issues, and code quality problems |
