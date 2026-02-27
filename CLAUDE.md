@@ -32,6 +32,7 @@ This is a personal dotfiles repository containing Claude Code configurations, cu
 | `/ieee-paper` | Generate IEEE-formatted LaTeX components (figures, tables, references, etc.) |
 | `/update` | Update documentation based on recent git diff |
 | `/deslop` | Remove AI-generated code slop from branch changes |
+| `/deep-research` | Fetch a URL and produce a comprehensive technical analysis document |
 
 ## Available Skills
 

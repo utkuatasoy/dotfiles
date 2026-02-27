@@ -29,6 +29,7 @@ Or copy specific files to your existing `~/.claude/` directory.
 | `/ieee-paper <component>` | Generate IEEE-formatted LaTeX components (figures, tables, refs) |
 | `/update <file>` | Update documentation based on recent git diff |
 | `/deslop` | Remove AI-generated code slop from branch changes |
+| `/deep-research <url> [lang]` | Fetch a URL and produce a comprehensive technical analysis document |
 | `/ascii-diagram` | Convert architecture descriptions to ASCII art diagrams |
 | `/sync-frontend` | Analyze backend changes and update corresponding frontend files |
 
@@ -73,6 +74,7 @@ Creates comprehensive pytest test suites for FastAPI Python backends:
 │   ├── ieee-paper.md
 │   ├── update.md
 │   ├── deslop.md
+│   ├── deep-research.md
 │   ├── ascii-diagram.md
 │   └── sync-frontend.md
 ├── skills/             # Reusable skill definitions
