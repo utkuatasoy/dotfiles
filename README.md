@@ -49,6 +49,7 @@ Or copy specific files to your existing `~/.claude/` directory.
 | Hook | Event | Description |
 |------|-------|-------------|
 | `session-context.sh` | `SessionStart` | Auto-loads `OVERVIEW.md` (or falls back to `README.md` / `CLAUDE.md`) plus the last 5 git commits into Claude's context at session start |
+| `commit-guard.py` | `PreToolUse` (Bash) | Blocks any `git commit` that violates the conventional-commit rules: no co-author attribution, no "Generated with" / Claude Code tags, no robot emoji, no multiline body, must start with a conventional type prefix |
 
 ## Custom Agents
 
@@ -68,7 +69,8 @@ Creates comprehensive pytest test suites for FastAPI Python backends:
 .claude/
 ├── settings.json       # Global Claude Code settings (registers hooks)
 ├── hooks/              # Shell/python hooks invoked by Claude Code events
-│   └── session-context.sh
+│   ├── session-context.sh
+│   └── commit-guard.py
 ├── commands/           # Slash commands (/command-name)
 │   ├── init.md
 │   ├── commit.md
