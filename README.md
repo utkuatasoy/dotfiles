@@ -44,6 +44,12 @@ Or copy specific files to your existing `~/.claude/` directory.
 | `architecture-diagrams` | Generate Mermaid architecture diagrams for codebase |
 | `latex` | LaTeX Q&A assistant for IEEE papers (troubleshooting, tips, syntax) |
 
+## Hooks
+
+| Hook | Event | Description |
+|------|-------|-------------|
+| `session-context.sh` | `SessionStart` | Auto-loads `OVERVIEW.md` (or falls back to `README.md` / `CLAUDE.md`) plus the last 5 git commits into Claude's context at session start |
+
 ## Custom Agents
 
 ### test-engineer
@@ -60,6 +66,9 @@ Creates comprehensive pytest test suites for FastAPI Python backends:
 
 ```
 .claude/
+├── settings.json       # Global Claude Code settings (registers hooks)
+├── hooks/              # Shell/python hooks invoked by Claude Code events
+│   └── session-context.sh
 ├── commands/           # Slash commands (/command-name)
 │   ├── init.md
 │   ├── commit.md
