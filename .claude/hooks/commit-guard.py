@@ -51,6 +51,39 @@ def extract_messages(cmd: str):
     return messages
 
 
+def _strip_heredoc_bodies(cmd: str) -> str:
+    """Remove heredoc bodies so `git commit` text *inside* a heredoc
+    (e.g. a python script printed via `python3 - <<'PY' ... PY`) is
+    not misdetected as an actual commit invocation. Keep the `<<TAG`
+    marker itself so surrounding shell structure remains parseable."""
+    return re.sub(
+        r"(<<-?\s*'?\w+'?)\s*\n.*?\n\s*\w+\b",
+        r"\1",
+        cmd,
+        flags=re.DOTALL,
+    )
+
+
+def is_git_commit(cmd: str) -> bool:
+    """Return True if the command invokes `git commit`.
+
+    Two patterns are OR'd so common variants all match:
+      - Strict:     only flag tokens between `git` and `commit`
+                    (e.g. `git -n commit`)
+      - Permissive: any token sequence between `git` and `commit`
+                    (e.g. `git -C /path commit`, `git --git-dir=... commit`)
+
+    Heredoc bodies are stripped first so `git commit` appearing inside
+    a quoted script does not trigger a false positive.
+    """
+    stripped = _strip_heredoc_bodies(cmd)
+    patterns = (
+        r"\bgit\s+(?:-[^\s]+\s+)*commit\b",
+        r"\bgit(?:\s+\S+)*?\s+commit\b",
+    )
+    return any(re.search(p, stripped) for p in patterns)
+
+
 def main():
     try:
         data = json.load(sys.stdin)
@@ -63,7 +96,7 @@ def main():
     cmd = data.get("tool_input", {}).get("command", "") or ""
 
     # Only care about git commit (not git log, git commit-tree, etc.)
-    if not re.search(r"\bgit\s+(?:-[^\s]+\s+)*commit\b", cmd):
+    if not is_git_commit(cmd):
         sys.exit(0)
 
     violations = []
