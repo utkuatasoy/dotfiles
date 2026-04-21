@@ -32,6 +32,7 @@ Or copy specific files to your existing `~/.claude/` directory.
 | `/deep-research <url> [lang]` | Fetch a URL and produce a comprehensive technical analysis document |
 | `/ascii-diagram` | Convert architecture descriptions to ASCII art diagrams |
 | `/sync-frontend` | Analyze backend changes and update corresponding frontend files |
+| `/self-review` | Adversarially review session changes for security, correctness, edge cases, and test gaps — then fix them |
 
 ## Available Skills
 
@@ -87,7 +88,8 @@ Creates comprehensive pytest test suites for FastAPI Python backends:
 │   ├── deslop.md
 │   ├── deep-research.md
 │   ├── ascii-diagram.md
-│   └── sync-frontend.md
+│   ├── sync-frontend.md
+│   └── self-review.md
 ├── skills/             # Reusable skill definitions
 │   ├── commit.md
 │   ├── clean-code.md
