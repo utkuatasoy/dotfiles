@@ -1,0 +1,6 @@
+# alias|<provider>/<model id>|<probe url (GET /v1/models)>|<api key env var>
+# Order = probe preference when no model is pinned.
+# Provider keys and model ids must match config/models.json.
+ds|onprem-prod/<deepseek-model-id>|https://<PROD_HOST>/<deepseek-deployment>/v1/models|ONPREM_PROD_API_KEY
+flash|onprem-test/<glm-flash-model-id>|https://<TEST_HOST>/<glm-flash-deployment>/v1/models|ONPREM_TEST_API_KEY
+glm|onprem-test/<glm-model-id>|https://<TEST_HOST>/<glm-deployment>/v1/models|ONPREM_TEST_API_KEY

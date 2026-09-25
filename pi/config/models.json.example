@@ -1,0 +1,151 @@
+{
+  "providers": {
+    "onprem-prod": {
+      "name": "On-prem Prod",
+      "baseUrl": "https://<PROD_HOST>/<deepseek-deployment>/v1",
+      "api": "openai-completions",
+      "apiKey": "$ONPREM_PROD_API_KEY",
+      "compat": {
+        "thinkingFormat": "chat-template",
+        "supportsReasoningEffort": true
+      },
+      "models": [
+        {
+          "id": "<deepseek-model-id>",
+          "name": "<deepseek display name>",
+          "reasoning": true,
+          "input": [
+            "text",
+            "image"
+          ],
+          "maxTokens": 65536,
+          "cost": {
+            "input": 0,
+            "output": 0,
+            "cacheRead": 0,
+            "cacheWrite": 0
+          },
+          "thinkingLevelMap": {
+            "minimal": null,
+            "low": "low",
+            "medium": null,
+            "high": "high",
+            "xhigh": null,
+            "max": "max"
+          },
+          "samplingParams": {
+            "temperature": 1,
+            "top_p": 0.95
+          },
+          "compat": {
+            "thinkingFormat": "chat-template",
+            "supportsReasoningEffort": true,
+            "chatTemplateKwargs": {
+              "thinking": {
+                "$var": "thinking.enabled"
+              },
+              "reasoning_effort": {
+                "$var": "thinking.effort",
+                "omitWhenOff": true
+              }
+            }
+          }
+        }
+      ]
+    },
+    "onprem-test": {
+      "name": "On-prem Test",
+      "baseUrl": "https://<TEST_HOST>/<glm-flash-deployment>/v1",
+      "api": "openai-completions",
+      "apiKey": "$ONPREM_TEST_API_KEY",
+      "compat": {
+        "thinkingFormat": "chat-template",
+        "supportsReasoningEffort": true
+      },
+      "models": [
+        {
+          "id": "<glm-flash-model-id>",
+          "name": "<glm flash display name>",
+          "baseUrl": "https://<TEST_HOST>/<glm-flash-deployment>/v1",
+          "reasoning": true,
+          "input": [
+            "text",
+            "image"
+          ],
+          "maxTokens": 65536,
+          "cost": {
+            "input": 0,
+            "output": 0,
+            "cacheRead": 0,
+            "cacheWrite": 0
+          },
+          "thinkingLevelMap": {
+            "minimal": null,
+            "low": "low",
+            "medium": null,
+            "high": "high",
+            "xhigh": null,
+            "max": "max"
+          },
+          "samplingParams": {
+            "model": "<served model name, if the gateway needs it>",
+            "temperature": 1
+          },
+          "compat": {
+            "thinkingFormat": "chat-template",
+            "supportsReasoningEffort": true,
+            "chatTemplateKwargs": {
+              "enable_thinking": {
+                "$var": "thinking.enabled"
+              },
+              "reasoning_effort": {
+                "$var": "thinking.effort",
+                "omitWhenOff": true
+              }
+            }
+          }
+        },
+        {
+          "id": "<glm-model-id>",
+          "name": "<glm display name>",
+          "baseUrl": "https://<TEST_HOST>/<glm-deployment>/v1",
+          "reasoning": true,
+          "input": [
+            "text"
+          ],
+          "maxTokens": 65536,
+          "cost": {
+            "input": 0,
+            "output": 0,
+            "cacheRead": 0,
+            "cacheWrite": 0
+          },
+          "thinkingLevelMap": {
+            "minimal": null,
+            "low": null,
+            "medium": null,
+            "high": "high",
+            "xhigh": null,
+            "max": "max"
+          },
+          "samplingParams": {
+            "temperature": 1
+          },
+          "compat": {
+            "thinkingFormat": "chat-template",
+            "supportsReasoningEffort": true,
+            "chatTemplateKwargs": {
+              "enable_thinking": {
+                "$var": "thinking.enabled"
+              },
+              "reasoning_effort": {
+                "$var": "thinking.effort",
+                "omitWhenOff": true
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

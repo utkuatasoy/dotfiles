@@ -1,0 +1,5 @@
+node_modules/
+config/models.json
+config/default-model
+config/aliases
+config/last-model
