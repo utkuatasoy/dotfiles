@@ -1,16 +1,20 @@
-# Claude Code Dotfiles
+# Claude Code & pi Dotfiles
 
-Personal Claude Code configurations including custom commands, skills, and agents.
+Personal agent configurations: Claude Code commands, skills, agents and hooks, plus the
+[pi coding agent](https://www.npmjs.com/package/@earendil-works/pi-coding-agent) harness for self-hosted,
+OpenAI-compatible model endpoints.
 
 ## Installation
 
 Symlink the `.claude` directory to your home folder:
 
 ```bash
-ln -s ~/Desktop/dotfiles/.claude ~/.claude
+ln -s ~/Desktop/code-personal/dotfiles/.claude ~/.claude
 ```
 
 Or copy specific files to your existing `~/.claude/` directory.
+
+The pi harness in `pi/` installs separately — see [pi Harness](#pi-harness-on-prem-models).
 
 ## Available Commands
 
@@ -64,6 +68,39 @@ Creates comprehensive pytest test suites for FastAPI Python backends:
 - Follows AAA pattern (Arrange, Act, Assert)
 - Supports async testing with pytest-asyncio
 
+## pi Harness (on-prem models)
+
+`pi/` is a self-contained harness around the pi coding agent for private, OpenAI-compatible endpoints
+(vLLM / SGLang / Dynamo style gateways). It keeps endpoints and keys out of git: only `*.example` templates are
+tracked, and the real `config/models.json` and `config/aliases` stay local (and gitignored).
+
+What it adds on top of stock pi:
+
+| Feature | Description |
+|---------|-------------|
+| Model aliases | `pi ds`, `pi flash`, `pi glm` instead of long `--model provider/model-id` flags |
+| Model picker | Bare `pi` lists the aliases with their live endpoint status; `Enter` starts, `d` also sets the default |
+| Persistent default | `pi use <alias>` / `pi use --clear`, with a "first reachable endpoint" fallback |
+| Status probing | `pi models` / `pi help` call each endpoint's `/v1/models` in parallel and report `ok`, `bad key`, `down`, `key not set` |
+| HUD footer | Two-line status footer: model, context bar, git branch, running tool, token counts (`/hud` toggles it) |
+| Git guard | Commit-message rules and push approval enforced as a pi extension — the pi port of `commit-guard.py` |
+| Package resources | The superpowers skills and the subagent tools are loaded by path, so extension discovery can stay off (`-ne`) and the system prompt stays small |
+
+The harness has its own reference — setup, model-picker keys, thinking configuration, the git guard rules and the
+VS Code `cmd+v` image-paste fix all live in [`pi/README.md`](pi/README.md).
+
+Quick start:
+
+```bash
+cd pi && npm install
+cp config/models.json.example config/models.json   # fill in hosts, model ids, context windows
+cp config/aliases.example config/aliases           # aliases, probe urls, API key env vars
+
+mkdir -p ~/.pi/agent && ln -sfn "$PWD/config/models.json" ~/.pi/agent/models.json
+```
+
+Then export the API keys, `source <harness-root>/shell/pi.zsh` from `~/.zshrc`, and run `pi help`.
+
 ## Structure
 
 ```
@@ -101,6 +138,18 @@ Creates comprehensive pytest test suites for FastAPI Python backends:
     └── test-engineer.md
 ```
 
+```
+pi/                      # pi harness for on-prem endpoints (own README, own package.json)
+├── run_pi.sh            # launcher: resolves the model, loads extensions, starts pi
+├── shell/pi.zsh         # zsh function `pi` (picker, help, models, use, pick, config, raw) plus completion
+├── wrappers/hud.ts      # HUD footer extension
+├── extensions/
+│   └── git-guard.ts     # commit rules + push approval as a tool_call hook
+└── config/
+    ├── models.json.example
+    └── aliases.example
+```
+
 ## Requirements
 
 Some commands require specific tools:
@@ -108,3 +157,4 @@ Some commands require specific tools:
 - `/lint`, `/fix-types`: `uv` package manager with `ruff` and `pyrefly`
 - `/architecture`: `claude-mermaid` MCP plugin
 - `/tester`: Python project with FastAPI structure
+- `pi/`: Node.js >= 22, npm, git, curl and zsh

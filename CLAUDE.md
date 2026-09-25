@@ -4,7 +4,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Repository Purpose
 
-This is a personal dotfiles repository containing Claude Code configurations, custom commands, skills, and agents. These configurations are designed to be symlinked or copied to `~/.claude/` for global availability across all projects.
+This is a personal dotfiles repository containing agent configurations: Claude Code commands, skills, agents and
+hooks under `.claude/`, plus the pi harness under `pi/` (launcher, zsh helpers, extensions and config templates for
+self-hosted, OpenAI-compatible model endpoints). These configurations are designed to be symlinked or copied to
+`~/.claude/` and `~/.pi/agent/` for global availability across all projects.
 
 ## Structure
 
@@ -13,6 +16,13 @@ This is a personal dotfiles repository containing Claude Code configurations, cu
 ├── commands/       # Slash commands invoked with /command-name
 ├── skills/         # Reusable skill definitions (always active)
 └── agents/         # Custom agent configurations
+
+pi/                 # pi coding agent harness (own package.json and README)
+├── run_pi.sh       # launcher: resolves the model, loads extensions, starts pi
+├── shell/pi.zsh    # zsh function `pi` plus completion
+├── wrappers/       # HUD footer extension
+├── extensions/     # git-guard.ts — pi port of .claude/hooks/commit-guard.py
+└── config/         # *.example templates only; real hosts/keys are gitignored
 ```
 
 ## Available Commands
@@ -54,7 +64,21 @@ This is a personal dotfiles repository containing Claude Code configurations, cu
 To use these configurations globally:
 
 ```bash
-ln -s ~/Desktop/dotfiles/.claude ~/.claude
+ln -s ~/Desktop/code-personal/dotfiles/.claude ~/.claude
 ```
 
 Or copy specific files to your existing `~/.claude/` directory.
+
+## pi Harness
+
+`pi/` wraps the pi coding agent for private, OpenAI-compatible endpoints. `pi/README.md` is the reference for it
+(setup, model picker, thinking configuration, git guard, VS Code image paste); do not duplicate that content here.
+Two things matter when editing this repo:
+
+- **Never commit real endpoints, keys or model ids.** Only `config/*.example` files are tracked; `config/models.json`,
+  `config/aliases`, `config/default-model` and `config/last-model` are gitignored and must stay that way. Keep
+  company names and internal hostnames out of the examples — use placeholders like `<PROD_HOST>` and
+  `onprem-prod`.
+- **The guard rules live in two places.** `extensions/git-guard.ts` (pi) is a port of `.claude/hooks/commit-guard.py`
+  (Claude Code): commit-message rules are identical, and both must change together when the rules change. The pi
+  version also prompts before `git push`, while the Python hook only guards commits.
