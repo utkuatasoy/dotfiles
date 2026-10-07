@@ -12,8 +12,11 @@ This repo adds the pieces that make day-to-day use on private endpoints pleasant
 - **A picker on bare `pi`.** Arrow keys through the aliases with their live status, `Enter` starts,
   `d` starts and saves it as the default (last pick is preselected next time).
 - **A persistent default model.** `pi use flash`, with a fallback to "first reachable endpoint".
-- **Live endpoint status.** `pi help` and `pi models` call each endpoint's `/v1/models` with its API key in parallel,
-  and show which models are usable right now (`ok`, `bad key`, `down`, `key not set`).
+- **`pi discover`.** Sync `config/aliases` and `config/models.json` with a model registry
+  (one per environment, set in `config/discover.json`): newly-registered vLLM chat models are added as aliases, models that
+  left the registry are dropped, hand-authored entries are never touched. See [Discovering models](#discovering-models).
+- **Live endpoint status.** `pi help` and `pi models` send each model a 1-token chat completion with its API key in
+  parallel, and show which models answer right now (`ok`, `bad key`, `not served`, `down`, `key not set`).
 - **A HUD footer.** A two-line status line in the style of claude-hud (details below).
 - **Guardrails.** `extensions/git-guard.ts` blocks commits that break the message rules and asks for approval
   before any push. See [Git guard](#git-guard).
@@ -110,8 +113,10 @@ picture, even though the endpoint would have accepted it.
 | `pi <alias> -p "..."` | Run a single prompt, print the answer and exit |
 | `pi <alias> --thinking <off\|low\|high\|max>` | Set the thinking level (limited to what the model supports) |
 | `pi use <alias>` / `pi use --clear` | Set or clear the persistent default model |
-| `pi models` | List models with the default (`*`) and each endpoint's status |
+| `pi models` | List models grouped by env (prod/test) and family (deepseek, glm, …) with the default (`*`) and each endpoint's status |
 | `pi help` | Usage, plus the models that are available right now |
+| `pi discover` | Re-fetch the model registry and reconcile `config/aliases` + `config/models.json` |
+| `pi token <JWT>` | Save the model registry token that `pi discover` authenticates with |
 | `pi config` | Open `config/models.json` in `$EDITOR` |
 | `pi raw [args]` | Run the pi binary directly, without the launcher |
 | `PI_MODEL=<alias> pi` | Pick a model for one run through an env var |
@@ -137,13 +142,13 @@ The launcher picks the model in this order:
 Bare `pi` in an interactive shell resolves nothing itself — it opens a picker first:
 
 ```
-pick a model   ↑/↓ or j/k · 1-3 · Enter start · d start + set as default · q cancel
+pick a model   ↑/↓ or j/k · 1-4 · Enter start · d start + set as default · q cancel
 
   prod:
-❯ * ds      onprem-prod/<deepseek-model-id>           ok
+❯ * flash   onprem-prod/<deepseek-flash-model-id>     ok
+    ds      onprem-prod/<deepseek-model-id>           ok
   test:
-    flash   onprem-test/<glm-flash-model-id>          ok
-    glm     onprem-test/<glm-model-id>                401 bad key
+    glm     onprem-test/glm-53-flash                   401 bad key
 ```
 
 | Key | Action |
@@ -161,16 +166,23 @@ to pi), and `PI_NO_PICKER=1 pi` turns it off — which is what scripts and pipes
 
 What it does:
 
-- Rows are `config/aliases` in file order, grouped by environment, which is derived from the **probe URL**:
+- **Only live models are offered.** Rows that did not probe `ok` (`403`, `down`, `503`, key not set) are
+  hidden from the picker — it offers the models that work right now. Use `pi models` or `pi help` to see the
+  full list with each one's status.
+- Rows are `config/aliases` in file order, grouped by environment (prod/test) and then family
+  (deepseek, glm, qwen, …), derived from the **probe URL** and the model id:
   `*.test-*` or `*-test.*` is `test` (that includes the `…-ai-platform-test.apps.<cluster>` route style),
   everything else is `prod`.
-- Statuses are probed in parallel while `fetching model status...` is on screen — `curl -sk -m 2` per row in the
-  picker (`pi models` / `pi help` use the 5 s default of the same helper). The menu draws after at most ~6 s and
-  rows that never answered show `?`.
+- Statuses are probed in parallel while `fetching model status...` is on screen: one
+  `POST <base>/chat/completions` with `max_tokens: 1` per row, `curl -sk -m 6` in the picker (`pi models` /
+  `pi help` use the 10 s default of the same helper). The menu draws as soon as every probe is back, after at
+  most ~7 s, and rows that never answered show `?`.
 
   | Status | Meaning |
   |---|---|
-  | `ok` | `/v1/models` answered `200` |
+  | `ok` | the 1-token chat completion answered `200` with `choices` |
+  | `404 not served` | the endpoint does not serve that model id |
+  | `200 no choices` | `200`, but the body has no `choices` (not a chat response) |
   | `401 bad key` / `403 no access` | the key was rejected / is not authorized for that endpoint |
   | `$VAR not set` | the API key env var in the last column of `config/aliases` is not exported |
   | `down` | no answer at all (`curl` code `000`) — host or route unreachable |
@@ -178,8 +190,7 @@ What it does:
 
 - The default from `config/default-model` is marked `*`, and the cursor starts on the last pick
   (`config/last-model`), falling back to the default — so `Enter` twice in a row launches the same model.
-- A broken row is drawn dim with a red status, but it stays selectable: the probe is information, not a gate.
-  `Enter` on a `down` model starts pi against it anyway.
+- A model that is not `ok` is hidden from the picker. To start one anyway, name it: `pi <alias>`.
 - `Enter` writes `config/last-model`; `d` writes `config/default-model` too and prints `default model: <alias>`.
   Both files are the ones `pi use` writes and the launcher reads.
 - The pick is handed to `run_pi.sh` as `provider/model-id`, so it wins over `$PI_MODEL`, `config/default-model` and
@@ -291,12 +302,48 @@ following by trial and error:
 - **Get the served model id from `GET /v1/models`.** It can differ from the deployment name, and a wrong id shows
   up as a 404, not as a connection error.
 
+## Discovering models
+
+`pi discover` keeps the harness in sync with a model registry. Copy `config/discover.json.example` to
+`config/discover.json` and fill in one entry per environment: `env`, `registry` (the registry URL that lists the
+models), `gateway` (the inference gateway base URL), `provider` (the `models.json` provider key) and `keyvar`
+(the API-key env var). The registry must return a JSON list of models with `model_name`, `runtime`,
+`is_active`, `details.labels` and `args.options.max-model-len`. For each environment discover calls
+`GET <registry>` (bearer token), keeps every vLLM model that is
+chat-capable (labels `chat`/`text-to-text`, or a name that is not embedding/ASR/TTS/rerank/OCR), and
+reconciles `config/aliases` + `config/models.json`:
+
+- **Hand-authored entries are never touched.** The aliases and model entries you wrote stay exactly as they
+  are, even if the model is absent from the registry (deployments can differ from catalog names).
+- **New models are only added when they answer.** Each candidate is probed with a real 1-token
+  `/chat/completions` request (parallel); a `/v1/models` 200 is not enough on its own, because shared or
+  misconfigured gateway routes still answer the probe while rejecting the actual chat call with a 400/404.
+  Models that do not return a response — key has no access, model inactive, or the registry name is not the
+  served id — are left out. When the deployment serves the model under a different id
+  (e.g. `team__deepseek-v41-flash`), that id is written to `samplingParams.model`.
+- The alias is the slugified model name, suffixed `-test`/`-prod` on a collision, with the best-guess
+  gateway URL (`<gateway>/<model_name>/v1`). A wrong gateway URL shows up as
+  `403`/`down` in the picker — fix it in `config/aliases` and it is preserved from then on.
+- **The context window comes from the server.** vLLM reports the real `max_model_len` in `GET /v1/models`, and
+  discover uses it over the registry's `max-model-len`, which can be stale (a model listed at 262144 can be
+  served at 32768). The registry value is the fallback when the server does not report one (Dynamo routes),
+  then 128k. `maxTokens` is a quarter of the window, capped at 65536, so the prompt still fits: vLLM rejects a
+  request with a `400` when `max_completion_tokens` exceeds `max_model_len`, or when prompt + output does.
+  Re-running discover updates the window of models it added before when the server reports a new value.
+- **Models it added before that left the registry are dropped** (tracked in `config/discovered-models.json`).
+- The discovery token is short-lived. Save it with `pi token <JWT>` (or `REGISTRY_TOKEN`) and re-run `pi discover`;
+  a 401 tells you to refresh it.
+
+The display groups models by **env (prod/test) then family** (deepseek, glm, qwen, … derived from the model
+name) in the picker, `pi models` and `pi help`.
+
 ## Layout
 
 ```
 .
 ├── run_pi.sh                  launcher: resolves the model, loads extensions, starts pi
-├── shell/pi.zsh               zsh function `pi` (picker, help, models, use, pick, config, raw) plus completion
+├── discover.py                `pi discover` — reconciles aliases/models.json with the model registry
+├── shell/pi.zsh               zsh function `pi` (picker, help, models, use, pick, discover, token, config, raw) plus completion
 ├── wrappers/hud.ts            HUD footer extension
 ├── extensions/
 │   └── git-guard.ts           commit rules + push approval as a `tool_call` hook
@@ -304,7 +351,10 @@ following by trial and error:
 │   ├── models.json.example    provider catalog template        → models.json   (gitignored)
 │   ├── aliases.example        alias / probe / key-var template  → aliases       (gitignored)
 │   ├── default-model          written by `pi use`, and by `d` in the picker     (gitignored)
-│   └── last-model             written by the picker, preselected next time      (gitignored)
+│   ├── last-model             written by the picker, preselected next time      (gitignored)
+│   ├── discover.json.example  registry/gateway per env template → discover.json (gitignored)
+│   ├── registry-token         registry token for `pi discover` (pi token)       (gitignored)
+│   └── discovered-models.json what `pi discover` added, so it can drop them later (gitignored)
 └── package.json               pins the pi version
 ```
 
@@ -385,6 +435,10 @@ curl -sk -H "Authorization: Bearer $<PROVIDER_KEY_VAR>" "$base/models" | python3
 - A provider key can front several deployments — each model's own `baseUrl` wins over the provider's, so read
   `/v1/models` **per model**, not once per provider.
 - Both fields describe prompt **plus** generation; `reserveTokens` is what keeps the answer inside that budget.
+- Set `maxTokens` well below `contextWindow` (a quarter is a good default). pi sends it as
+  `max_completion_tokens`, and vLLM rejects the request when it exceeds `max_model_len`:
+  `400: max_completion_tokens=65536 cannot be greater than max_model_len=max_total_tokens=32768`.
+  `maxTokens` equal to `contextWindow` also fails, because prompt + output must fit in the window.
 
 ## Security notes
 

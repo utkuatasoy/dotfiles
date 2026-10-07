@@ -1,0 +1,18 @@
+{
+    "envs": [
+        {
+            "env": "prod",
+            "registry": "https://<PROD_REGISTRY_HOST>/api/models/",
+            "gateway": "https://<PROD_HOST>",
+            "provider": "onprem-prod",
+            "keyvar": "ONPREM_PROD_API_KEY"
+        },
+        {
+            "env": "test",
+            "registry": "https://<TEST_REGISTRY_HOST>/api/models/",
+            "gateway": "https://<TEST_HOST>",
+            "provider": "onprem-test",
+            "keyvar": "ONPREM_TEST_API_KEY"
+        }
+    ]
+}

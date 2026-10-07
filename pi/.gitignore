@@ -3,3 +3,7 @@ config/models.json
 config/default-model
 config/aliases
 config/last-model
+config/registry-token
+config/discover.json
+config/discovered-models.json
+__pycache__/

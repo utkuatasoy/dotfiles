@@ -81,7 +81,8 @@ What it adds on top of stock pi:
 | Model aliases | `pi ds`, `pi flash`, `pi glm` instead of long `--model provider/model-id` flags |
 | Model picker | Bare `pi` lists the aliases with their live endpoint status; `Enter` starts, `d` also sets the default |
 | Persistent default | `pi use <alias>` / `pi use --clear`, with a "first reachable endpoint" fallback |
-| Status probing | `pi models` / `pi help` call each endpoint's `/v1/models` in parallel and report `ok`, `bad key`, `down`, `key not set` |
+| Status probing | `pi models` / `pi help` send each model a 1-token chat completion in parallel and report `ok`, `bad key`, `not served`, `down`, `key not set`; the picker offers only live models |
+| Model discovery | `pi discover` syncs aliases and `models.json` with a model registry (`config/discover.json`), and takes each model's context window from the server's `max_model_len` |
 | HUD footer | Two-line status footer: model, context bar, git branch, running tool, token counts (`/hud` toggles it) |
 | Git guard | Commit-message rules and push approval enforced as a pi extension — the pi port of `commit-guard.py` |
 | Package resources | The superpowers skills and the subagent tools are loaded by path, so extension discovery can stay off (`-ne`) and the system prompt stays small |

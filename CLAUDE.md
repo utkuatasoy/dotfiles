@@ -76,7 +76,8 @@ Or copy specific files to your existing `~/.claude/` directory.
 Two things matter when editing this repo:
 
 - **Never commit real endpoints, keys or model ids.** Only `config/*.example` files are tracked; `config/models.json`,
-  `config/aliases`, `config/default-model` and `config/last-model` are gitignored and must stay that way. Keep
+  `config/aliases`, `config/default-model`, `config/last-model`, `config/discover.json`,
+  `config/registry-token` and `config/discovered-models.json` are gitignored and must stay that way. Keep
   company names and internal hostnames out of the examples — use placeholders like `<PROD_HOST>` and
   `onprem-prod`.
 - **The guard rules live in two places.** `extensions/git-guard.ts` (pi) is a port of `.claude/hooks/commit-guard.py`
